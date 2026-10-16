@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_inherit_approval" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.procurement.approval</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_approval_approve" type="object" string="Approve"
+                        class="btn-success" invisible="not can_approve"/>
+                <button name="action_approval_reject" type="object" string="Reject"
+                        class="btn-danger" invisible="not can_approve"/>
+                <button name="action_approval_reset" type="object" string="Cancel Approval Request"
+                        invisible="approval_state not in ('pending', 'rejected')"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="approval_state != 'pending'">
+                    Waiting for approval. See the <strong>Approval &amp; Budget</strong> tab.
+                </div>
+                <div class="alert alert-danger mb-0" role="alert" invisible="approval_state != 'rejected'">
+                    This order was rejected. See the <strong>Approval &amp; Budget</strong> tab for the reason.
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Approval &amp; Budget" name="procurement_approval">
+                    <group>
+                        <group string="Approval">
+                            <field name="approval_state" widget="badge"
+                                   decoration-info="approval_state == 'none'"
+                                   decoration-warning="approval_state == 'pending'"
+                                   decoration-success="approval_state == 'approved'"
+                                   decoration-danger="approval_state == 'rejected'"/>
+                            <field name="requested_by_id"/>
+                            <field name="approval_amount"/>
+                            <field name="can_approve" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
+                        </group>
+                        <group string="Budget &amp; Vendor">
+                            <field name="budget_id" options="{'no_create': True}"
+                                   readonly="state not in ('draft', 'sent')"/>
+                            <field name="budget_remaining" invisible="not budget_id"/>
+                            <field name="amount_total_company"/>
+                            <field name="vendor_score"/>
+                        </group>
+                    </group>
+                    <field name="approval_line_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="approver_ids" widget="many2many_tags"/>
+                            <field name="state" widget="badge"
+                                   decoration-warning="state == 'pending'"
+                                   decoration-success="state == 'approved'"
+                                   decoration-danger="state == 'rejected'"/>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

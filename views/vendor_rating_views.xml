@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vendor_rating_list" model="ir.ui.view">
+        <field name="name">vendor.rating.list</field>
+        <field name="model">vendor.rating</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="not on_time">
+                <field name="partner_id"/>
+                <field name="order_id"/>
+                <field name="picking_id"/>
+                <field name="planned_date"/>
+                <field name="date"/>
+                <field name="delay_days"/>
+                <field name="on_time"/>
+                <field name="quality_rating"/>
+                <field name="score"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vendor_rating_form" model="ir.ui.view">
+        <field name="name">vendor.rating.form</field>
+        <field name="model">vendor.rating</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="order_id"/>
+                            <field name="picking_id"/>
+                        </group>
+                        <group>
+                            <field name="planned_date"/>
+                            <field name="date"/>
+                            <field name="delay_days"/>
+                            <field name="on_time"/>
+                            <field name="quality_rating"/>
+                            <field name="delivery_score"/>
+                            <field name="score"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vendor_rating_search" model="ir.ui.view">
+        <field name="name">vendor.rating.search</field>
+        <field name="model">vendor.rating</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="order_id"/>
+                <filter name="late" string="Late Deliveries" domain="[('on_time', '=', False)]"/>
+                <separator/>
+                <filter name="group_vendor" string="Vendor" context="{'group_by': 'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vendor_rating" model="ir.actions.act_window">
+        <field name="name">Vendor Ratings</field>
+        <field name="res_model">vendor.rating</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

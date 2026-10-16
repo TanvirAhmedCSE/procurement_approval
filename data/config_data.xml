@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Editable in Settings > Technical > System Parameters -->
+    <record id="param_price_tolerance" model="ir.config_parameter">
+        <field name="key">procurement_approval.price_tolerance</field>
+        <field name="value">0</field>
+    </record>
+    <record id="param_qty_tolerance" model="ir.config_parameter">
+        <field name="key">procurement_approval.qty_tolerance</field>
+        <field name="value">0</field>
+    </record>
+    <record id="param_block_mismatch" model="ir.config_parameter">
+        <field name="key">procurement_approval.block_mismatch</field>
+        <field name="value">True</field>
+    </record>
+</odoo>

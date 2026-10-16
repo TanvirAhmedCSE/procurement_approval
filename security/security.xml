@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Roles (no implied_ids: every role is independent)  -->
+    <record id="module_category_procurement_control" model="ir.module.category">
+        <field name="name">Procurement Control</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="privilege_proc_admin" model="res.groups.privilege">
+        <field name="name">Procurement Configuration</field>
+        <field name="category_id" ref="module_category_procurement_control"/>
+    </record>
+    <record id="group_proc_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="privilege_id" ref="privilege_proc_admin"/>
+        <field name="comment">Manages approval levels. Read-only on budgets and ratings.</field>
+    </record>
+
+    <record id="privilege_proc_approver" model="res.groups.privilege">
+        <field name="name">Purchase Approval</field>
+        <field name="category_id" ref="module_category_procurement_control"/>
+    </record>
+    <record id="group_proc_approver" model="res.groups">
+        <field name="name">Approver</field>
+        <field name="privilege_id" ref="privilege_proc_approver"/>
+        <field name="comment">Approves or rejects purchase orders at the levels they are assigned to.</field>
+    </record>
+
+    <record id="privilege_proc_budget" model="res.groups.privilege">
+        <field name="name">Budget Control</field>
+        <field name="category_id" ref="module_category_procurement_control"/>
+    </record>
+    <record id="group_proc_budget_manager" model="res.groups">
+        <field name="name">Budget Manager</field>
+        <field name="privilege_id" ref="privilege_proc_budget"/>
+        <field name="comment">Creates and edits department / project budgets.</field>
+    </record>
+
+    <record id="privilege_proc_vendor" model="res.groups.privilege">
+        <field name="name">Vendor Rating</field>
+        <field name="category_id" ref="module_category_procurement_control"/>
+    </record>
+    <record id="group_proc_vendor_manager" model="res.groups">
+        <field name="name">Vendor Manager</field>
+        <field name="privilege_id" ref="privilege_proc_vendor"/>
+        <field name="comment">Can correct vendor rating records.</field>
+    </record>
+
+    <record id="privilege_proc_match" model="res.groups.privilege">
+        <field name="name">3-Way Match</field>
+        <field name="category_id" ref="module_category_procurement_control"/>
+    </record>
+    <record id="group_proc_match_controller" model="res.groups">
+        <field name="name">Match Controller</field>
+        <field name="privilege_id" ref="privilege_proc_match"/>
+        <field name="comment">Can accept a PO-Receipt-Bill mismatch so the bill can be posted.</field>
+    </record>
+
+    <!--  Record rules  -->
+    <!-- Multi-company (global rules) -->
+    <record id="rule_approval_rule_company" model="ir.rule">
+        <field name="name">Approval Level: multi-company</field>
+        <field name="model_id" ref="model_procurement_approval_rule"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_approval_line_company" model="ir.rule">
+        <field name="name">Approval Step: multi-company</field>
+        <field name="model_id" ref="model_purchase_approval_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_budget_company" model="ir.rule">
+        <field name="name">Procurement Budget: multi-company</field>
+        <field name="model_id" ref="model_procurement_budget"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_vendor_rating_company" model="ir.rule">
+        <field name="name">Vendor Rating: multi-company</field>
+        <field name="model_id" ref="model_vendor_rating"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Approvers can only change the steps assigned to them -->
+    <record id="rule_approval_line_approver_write" model="ir.rule">
+        <field name="name">Approval Step: approvers update only their own steps</field>
+        <field name="model_id" ref="model_purchase_approval_line"/>
+        <field name="groups" eval="[(4, ref('group_proc_approver'))]"/>
+        <field name="domain_force">[('approver_ids', 'in', [user.id])]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="rule_approval_line_admin" model="ir.rule">
+        <field name="name">Approval Step: administrators see all</field>
+        <field name="model_id" ref="model_purchase_approval_line"/>
+        <field name="groups" eval="[(4, ref('group_proc_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- Budgets: managers see everything (incl. archived periods), others only current budgets -->
+    <record id="rule_budget_manager_all" model="ir.rule">
+        <field name="name">Procurement Budget: managers see all</field>
+        <field name="model_id" ref="model_procurement_budget"/>
+        <field name="groups" eval="[(4, ref('group_proc_budget_manager')), (4, ref('group_proc_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="rule_budget_reader_current" model="ir.rule">
+        <field name="name">Procurement Budget: readers see budgets whose period has started</field>
+        <field name="model_id" ref="model_procurement_budget"/>
+        <field name="groups" eval="[(4, ref('group_proc_approver')), (4, ref('purchase.group_purchase_user')), (4, ref('purchase.group_purchase_manager'))]"/>
+        <field name="domain_force">[('period_started', '=', True)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

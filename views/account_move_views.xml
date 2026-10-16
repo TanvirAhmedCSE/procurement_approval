@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_match" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.three.way.match</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_match_accept" type="object" string="Accept Mismatch"
+                        groups="procurement_approval.group_proc_match_controller"
+                        invisible="match_state != 'mismatch' or match_override"/>
+                <button name="action_match_revoke" type="object" string="Revoke Acceptance"
+                        groups="procurement_approval.group_proc_match_controller"
+                        invisible="not match_override"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger mb-0" role="alert"
+                     invisible="match_state != 'mismatch' or match_override">
+                    <strong>3-way match mismatch (PO / Receipt / Bill)</strong><br/>
+                    <field name="match_note" nolabel="1"/>
+                </div>
+                <div class="alert alert-info mb-0" role="alert"
+                     invisible="match_state != 'mismatch' or not match_override">
+                    Mismatch accepted by <field name="match_override_user_id" readonly="1"/>
+                </div>
+                <field name="match_state" invisible="1"/>
+                <field name="match_override" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mismatch_bill_list" model="ir.ui.view">
+        <field name="name">account.move.list.mismatch</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="not match_override">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="invoice_date"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="match_state" widget="badge" decoration-danger="match_state == 'mismatch'"/>
+                <field name="match_override"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_mismatch_bills" model="ir.actions.act_window">
+        <field name="name">Mismatched Bills</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_type', '=', 'in_invoice'), ('match_state', '=', 'mismatch')]</field>
+        <field name="context">{'default_move_type': 'in_invoice'}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('view_mismatch_bill_list')})]"/>
+    </record>
+</odoo>

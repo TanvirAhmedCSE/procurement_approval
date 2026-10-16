@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_procurement_control_root" name="Approval &amp; Vendor Control"
+              parent="purchase.menu_purchase_root" sequence="90"/>
+
+    <menuitem id="menu_pending_approvals" name="Pending Approvals"
+              parent="menu_procurement_control_root" action="action_pending_approval_orders" sequence="10"
+              groups="group_proc_approver,group_proc_admin,purchase.group_purchase_manager"/>
+    <menuitem id="menu_procurement_budget" name="Budgets"
+              parent="menu_procurement_control_root" action="action_procurement_budget" sequence="20"
+              groups="group_proc_budget_manager,group_proc_admin,group_proc_approver"/>
+    <menuitem id="menu_vendor_rating" name="Vendor Ratings"
+              parent="menu_procurement_control_root" action="action_vendor_rating" sequence="30"
+              groups="group_proc_vendor_manager,group_proc_admin,purchase.group_purchase_manager"/>
+    <menuitem id="menu_mismatch_bills" name="Mismatched Bills"
+              parent="menu_procurement_control_root" action="action_mismatch_bills" sequence="40"
+              groups="group_proc_match_controller,group_proc_admin"/>
+    <menuitem id="menu_approval_rule" name="Approval Levels"
+              parent="menu_procurement_control_root" action="action_procurement_approval_rule" sequence="50"
+              groups="group_proc_admin"/>
+</odoo>

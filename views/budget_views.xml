@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_procurement_budget_list" model="ir.ui.view">
+        <field name="name">procurement.budget.list</field>
+        <field name="model">procurement.budget</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="budget_type"/>
+                <field name="department_id" optional="show"/>
+                <field name="analytic_account_id" optional="show"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="amount"/>
+                <field name="committed"/>
+                <field name="remaining"/>
+                <field name="used_percent" widget="progressbar"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_procurement_budget_form" model="ir.ui.view">
+        <field name="name">procurement.budget.form</field>
+        <field name="model">procurement.budget</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active" invisible="1"/>
+                            <field name="budget_type" widget="radio"/>
+                            <field name="department_id" invisible="budget_type != 'department'" required="budget_type == 'department'"/>
+                            <field name="analytic_account_id" invisible="budget_type != 'project'" required="budget_type == 'project'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <label for="date_from" string="Period"/>
+                            <div class="o_row">
+                                <field name="date_from"/> <span>to</span> <field name="date_to"/>
+                            </div>
+                            <field name="amount"/>
+                            <field name="control"/>
+                            <field name="committed"/>
+                            <field name="remaining"/>
+                            <field name="used_percent" widget="progressbar"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_procurement_budget" model="ir.actions.act_window">
+        <field name="name">Budgets</field>
+        <field name="res_model">procurement.budget</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

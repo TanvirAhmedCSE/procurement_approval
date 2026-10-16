@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_vendor_rating" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.vendor.rating</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_vendor_ratings" type="object" class="oe_stat_button"
+                        icon="fa-star" invisible="vendor_rating_count == 0">
+                    <field name="vendor_score" widget="statinfo" string="Vendor Score"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Vendor Rating" name="vendor_rating" invisible="vendor_rating_count == 0">
+                    <group>
+                        <field name="vendor_rating_count"/>
+                        <field name="vendor_on_time_rate"/>
+                        <field name="vendor_quality_avg"/>
+                        <field name="vendor_score"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

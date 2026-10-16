@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_rule_admin,procurement.approval.rule admin,model_procurement_approval_rule,group_proc_admin,1,1,1,1
+access_approval_rule_approver,procurement.approval.rule approver,model_procurement_approval_rule,group_proc_approver,1,0,0,0
+access_approval_rule_pm,procurement.approval.rule purchase manager,model_procurement_approval_rule,purchase.group_purchase_manager,1,0,0,0
+access_approval_line_admin,purchase.approval.line admin,model_purchase_approval_line,group_proc_admin,1,1,1,1
+access_approval_line_approver,purchase.approval.line approver,model_purchase_approval_line,group_proc_approver,1,1,0,0
+access_approval_line_user,purchase.approval.line purchase user,model_purchase_approval_line,purchase.group_purchase_user,1,0,0,0
+access_approval_line_pm,purchase.approval.line purchase manager,model_purchase_approval_line,purchase.group_purchase_manager,1,0,0,0
+access_budget_manager,procurement.budget budget manager,model_procurement_budget,group_proc_budget_manager,1,1,1,1
+access_budget_admin,procurement.budget admin,model_procurement_budget,group_proc_admin,1,0,0,0
+access_budget_approver,procurement.budget approver,model_procurement_budget,group_proc_approver,1,0,0,0
+access_budget_user,procurement.budget purchase user,model_procurement_budget,purchase.group_purchase_user,1,0,0,0
+access_budget_pm,procurement.budget purchase manager,model_procurement_budget,purchase.group_purchase_manager,1,0,0,0
+access_vendor_rating_manager,vendor.rating vendor manager,model_vendor_rating,group_proc_vendor_manager,1,1,1,1
+access_vendor_rating_admin,vendor.rating admin,model_vendor_rating,group_proc_admin,1,0,0,0
+access_vendor_rating_user,vendor.rating purchase user,model_vendor_rating,purchase.group_purchase_user,1,0,0,0
+access_vendor_rating_pm,vendor.rating purchase manager,model_vendor_rating,purchase.group_purchase_manager,1,0,0,0
+access_reject_wizard_approver,procurement.reject.wizard approver,model_procurement_reject_wizard,group_proc_approver,1,1,1,1
+access_reject_wizard_user,procurement.reject.wizard purchase user,model_procurement_reject_wizard,purchase.group_purchase_user,1,1,1,1

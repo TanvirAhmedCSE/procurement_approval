@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_approval_request" model="mail.template">
+        <field name="name">Purchase Approval: Request</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="email_from">{{ user.email_formatted or object.company_id.email_formatted }}</field>
+        <field name="subject">Approval needed: {{ object.name }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-size:14px;">
+    <p>Hello,</p>
+    <p>Purchase order <strong t-out="object.name"/> from <t t-out="object.partner_id.name"/>
+       (total <t t-out="format_amount(object.amount_total, object.currency_id)"/>)
+       is waiting for your approval at level <strong t-out="ctx.get('level') or ''"/>.</p>
+    <p>Requested by: <t t-out="object.requested_by_id.name or ''"/></p>
+    <p><a t-att-href="ctx.get('link')" style="background:#714B67;color:#fff;padding:8px 16px;border-radius:4px;text-decoration:none;">Review order</a></p>
+</div>
+        </field>
+    </record>
+
+    <record id="mail_template_approval_approved" model="mail.template">
+        <field name="name">Purchase Approval: Approved</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="email_from">{{ user.email_formatted or object.company_id.email_formatted }}</field>
+        <field name="subject">Approved: {{ object.name }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-size:14px;">
+    <p>Hello,</p>
+    <p>Purchase order <strong t-out="object.name"/> has been fully approved and confirmed.</p>
+    <p><a t-att-href="ctx.get('link')">Open order</a></p>
+</div>
+        </field>
+    </record>
+
+    <record id="mail_template_approval_rejected" model="mail.template">
+        <field name="name">Purchase Approval: Rejected</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="email_from">{{ user.email_formatted or object.company_id.email_formatted }}</field>
+        <field name="subject">Rejected: {{ object.name }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-size:14px;">
+    <p>Hello,</p>
+    <p>Purchase order <strong t-out="object.name"/> was rejected at level
+       <strong t-out="ctx.get('level') or ''"/>.</p>
+    <p>Reason: <t t-out="ctx.get('reason') or ''"/></p>
+    <p><a t-att-href="ctx.get('link')">Open order</a></p>
+</div>
+        </field>
+    </record>
+</odoo>
